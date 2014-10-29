@@ -2,7 +2,8 @@ module.exports = CPU();
 
 function CPU() {
     var OPCODES = {
-        '0': 'BRK'
+        '0': 'BRK',
+        '1': 'LDA'
     };
 
     function createMemory(size) {
@@ -13,11 +14,18 @@ function CPU() {
 
     function create(memorySize) {
         var memory = createMemory(memorySize || 256),
-            PC = 0;
+            PC = 0,
+            registerA;
 
         function getMemory() { return memory; }
 
         function getPC() { return PC; }
+
+        function getRegisterA() { return registerA; }
+
+        function getCurrentOp() { return OPCODES[getCurrent()]; }
+
+        function getCurrent() { return memory[PC]; }
 
         function load(program) {
             if(program.length > memory.length) { throw new Error('Out of bounds error'); }
@@ -26,23 +34,27 @@ function CPU() {
 
         function exec() {
             while(getCurrentOp() !== OPCODES[0]) {
+                switch(getCurrentOp()) {
+                    case 'LDA':
+                        advance();
+                        registerA = getCurrent();
+                        break;
+
+                    default :
+                        throw new Error('Unrecognised OPCODE : ' + getCurrent());
+                }
                 advance();
             }
         }
 
-        function getCurrentOp() {
-            return OPCODES[memory[PC]];
-        }
-
-        function advance() {
-            PC++;
-        }
+        function advance() { PC++; }
 
         return {
             getMemory: getMemory,
             load: load,
             exec: exec,
-            getPC: getPC
+            getPC: getPC,
+            getRegisterA: getRegisterA
         };
     }
 

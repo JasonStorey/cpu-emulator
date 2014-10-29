@@ -39,13 +39,31 @@ describe('cpu', function() {
     });
 
     describe('exec', function() {
+        var cpu;
 
-        it('BRK should stop program execution', function() {
-            var cpu = CPU.create();
+        beforeEach(function() {
+            cpu = CPU.create();
+        });
+
+        it('throws error if program contains unrecognised opcode', function() {
+            cpu.load([256]);
+
+            expect(cpu.exec.bind(null)).to.throw('Unrecognised OPCODE : 256');
+        });
+
+        it('BRK stops program execution', function() {
             cpu.load([0]);
             cpu.exec();
 
             expect(cpu.getPC()).to.equal(0);
+        });
+
+        it('LDA stores current value in register A', function() {
+            cpu.load([1, 100, 0]);
+            cpu.exec();
+
+            expect(cpu.getRegisterA()).to.equal(100);
+            expect(cpu.getPC()).to.equal(2);
         });
 
     });
