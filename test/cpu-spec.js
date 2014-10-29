@@ -148,6 +148,36 @@ describe('cpu', function() {
             expect(cpu.getRegisterY()).to.equal(99);
             expect(cpu.getPC()).to.equal(2);
         });
+    });
 
+    describe('using stack', function() {
+        var cpu;
+
+        beforeEach(function() {
+            cpu = CPU.create(640);
+        });
+
+        it('SP is initialised at the last memory address', function() {
+            expect(cpu.getSP()).to.equal(639);
+        });
+
+        it('JSR stores the PC in the memory address pointed to by the SP, decrements the SP, and sets the PC to point to the next value -1', function() {
+            cpu.load([11, 10, 0]);
+
+            cpu.exec();
+
+            expect(cpu.getMemory()[0]).to.equal(0);
+            expect(cpu.getSP()).to.equal(cpu.getMemory().length - 2);
+            expect(cpu.getPC()).to.equal(cpu.getMemory()[1]);
+        });
+
+        it('RTS increments the SP, and sets PC to be one more than the value stored in the memory address pointed to by the SP', function() {
+            cpu.load([12, 99, 0]);
+            cpu._setSP(0);
+            cpu.exec();
+
+            expect(cpu.getSP()).to.equal(1);
+            expect(cpu.getPC()).to.equal(cpu.getMemory()[cpu.getSP()] + 1);
+        });
     });
 });

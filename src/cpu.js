@@ -13,7 +13,9 @@ function CPU() {
         '7': 'BNE',
         '8': 'STA_X',
         '9': 'DEY',
-        '10': 'LDY'
+        '10': 'LDY',
+        '11': 'JSR',
+        '12': 'RTS'
     };
 
     function createMemory(size) {
@@ -24,6 +26,7 @@ function CPU() {
 
     function create(memorySize) {
         var memory = createMemory(memorySize || 256),
+            SP = memory.length - 1,
             PC = 0,
             flag,
             registerA,
@@ -33,6 +36,10 @@ function CPU() {
         function getMemory() { return memory; }
 
         function getPC() { return PC; }
+
+        function getSP() { return SP; }
+
+        function setSP(n) { SP = n; }
 
         function getFlag() { return flag; }
 
@@ -105,6 +112,19 @@ function CPU() {
                         registerY = getCurrent();
                         break;
 
+                    case 'JSR':
+                        memory[memory[SP]] = PC;
+                        SP--;
+                        advance();
+                        PC = getCurrent() - 1;
+                        break;
+
+                    case 'RTS':
+                        SP++;
+                        PC = memory[SP];
+                        break;
+
+
                     default :
                         throw new Error('Unrecognised OPCODE : ' + getCurrent());
                 }
@@ -117,6 +137,8 @@ function CPU() {
             load: load,
             exec: exec,
             getPC: getPC,
+            getSP: getSP,
+            _setSP: setSP,
             getFlag: getFlag,
             getRegisterA: getRegisterA,
             getRegisterX: getRegisterX,
