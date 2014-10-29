@@ -33,9 +33,20 @@ describe('cpu', function() {
             var cpu = CPU.create(1),
                 program = [1,2];
 
-            expect(cpu.load.bind(null, program)).to.throw('Out of range error');
+            expect(cpu.load.bind(null, program)).to.throw('Out of bounds error');
         });
 
     });
 
+    describe('exec', function() {
+
+        it('BRK should stop program execution', function() {
+            var cpu = CPU.create();
+            cpu.load([0]);
+            cpu.exec();
+
+            expect(cpu.getPC()).to.equal(0);
+        });
+
+    });
 });
