@@ -1,5 +1,4 @@
-var expect = require('chai').expect,
-    CPU = require('../src/cpu.js');
+var CPU = require('../../src/cpu.js');
 
 describe('cpu', function() {
 

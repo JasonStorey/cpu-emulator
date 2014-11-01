@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha test"
+    "test": "./node_modules/.bin/mocha --require ./test/mocha-setup.js --growl --reporter spec --recursive ./test/specs"
   },
   "author": "",
   "license": "ISC",
