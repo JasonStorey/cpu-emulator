@@ -1,6 +1,6 @@
 var CPU = require('../../src/cpu.js');
 
-describe('cpu', function() {
+describe('CPU', function() {
 
     it('is initialised with 256 bytes of memory by default', function() {
         var cpu = CPU.create();

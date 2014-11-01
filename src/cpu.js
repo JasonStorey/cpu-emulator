@@ -2,8 +2,6 @@ module.exports = CPU();
 
 function CPU() {
 
-    var OPCODES = require('./opcodes.js');
-
     function createMemory(size) {
         var memory = [];
         while(memory.length < size) { memory.push(0); }
@@ -35,8 +33,6 @@ function CPU() {
 
         function getRegisterY() { return registerY; }
 
-        function getCurrentOp() { return OPCODES[getCurrent()]; }
-
         function getCurrent() { return memory[PC]; }
 
         function advance() { PC++; }
@@ -47,65 +43,65 @@ function CPU() {
         }
 
         function exec() {
-            while(getCurrentOp() !== OPCODES[0]) {
-                switch(getCurrentOp()) {
-                    case 'LDA':
+            while(getCurrent() !== 0) {
+                switch(getCurrent()) {
+                    case 1: // 'LDA'
                         advance();
                         registerA = getCurrent();
                         break;
 
-                    case 'ADC':
+                    case 2: // 'ADC'
                         advance();
                         registerA += getCurrent();
                         break;
 
-                    case 'STA':
+                    case 3: // 'STA'
                         advance();
                         memory[getCurrent()] = getRegisterA();
                         break;
 
-                    case 'LDX':
+                    case 4: // 'LDX'
                         advance();
                         registerX = getCurrent();
                         break;
 
-                    case 'INX':
+                    case 5: // 'INX'
                         registerX++;
                         break;
 
-                    case 'CMY':
+                    case 6: // 'CMY'
                         advance();
                         flag = (getCurrent() === getRegisterY());
                         break;
 
-                    case 'BNE':
+                    case 7: // 'BNE'
                         advance();
                         if(!getFlag()) {
                             PC += getCurrent();
                         }
                         break;
 
-                    case 'STA_X':
+                    case 8: // 'STA_X'
                         memory[getRegisterX()] = getRegisterA();
                         break;
 
-                    case 'DEY':
+                    case 9: // 'DEY'
                         registerY--;
                         break;
 
-                    case 'LDY':
+                    case 10: // 'LDY'
                         advance();
                         registerY = getCurrent();
                         break;
 
-                    case 'JSR':
+                    case 11: // 'JSR'
                         memory[memory[SP]] = PC;
                         SP--;
                         advance();
                         PC = getCurrent() - 1;
                         break;
 
-                    case 'RTS':
+                    case 12: // 'RTS'
                         SP++;
                         PC = memory[SP];
                         break;
