@@ -6,24 +6,23 @@ function Assembler() {
     function create() {
 
         function readLine(line) {
-            var machineCode;
-
-            line.split(' ').forEach(function(token) {
-                var OP = OPCODES[token];
-                if(OP !== undefined) {
-                    machineCode = OP;
-                }
+            return line.split(' ').map(function(token) {
+                return OPCODES[token] !== undefined ? OPCODES[token] : parseInt(token);
             });
-
-            return machineCode;
         }
 
         function parse(program) {
+            var machineCode = [];
+
             if (typeof program !== 'string') {
                 throw new Error('invalid program');
             }
 
-            return [readLine(program)];
+            program.split('\n').forEach(function(line){
+                machineCode = machineCode.concat(readLine(line));
+            });
+
+            return machineCode;
         }
 
         return {
