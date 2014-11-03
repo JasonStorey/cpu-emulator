@@ -84,13 +84,23 @@ describe('Assembler', function() {
 
         describe('multiple assembly codes', function() {
 
-            it('splits on newline character', function() {
+            it('splits on single newline character', function() {
                 var program = 'INX\nDEY\nBRK';
                 expect(assembler.parse(program)).to.eql([5,9,0]);
             });
 
-            it('splits on space character', function() {
+            it('ignores multiple newline characters', function() {
+                var program = 'LDX 128\n\nLDA 119';
+                expect(assembler.parse(program)).to.eql([4,128,1,119]);
+            });
+
+            it('splits on single space character', function() {
                 var program = 'LDA 100';
+                expect(assembler.parse(program)).to.eql([1,100]);
+            });
+
+            it('handles start / end space characters', function() {
+                var program = ' LDA 100 ';
                 expect(assembler.parse(program)).to.eql([1,100]);
             });
 

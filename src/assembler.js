@@ -19,7 +19,11 @@ function Assembler() {
             }
 
             program.split('\n').forEach(function(line){
-                machineCode = machineCode.concat(readLine(line));
+                var trimmedLine = line.trim();
+
+                if(trimmedLine.length > 0) {
+                    machineCode = machineCode.concat(readLine(trimmedLine));
+                }
             });
 
             return machineCode;
