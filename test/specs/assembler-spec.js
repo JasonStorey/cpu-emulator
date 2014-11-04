@@ -14,7 +14,7 @@ describe('Assembler', function() {
             expect(assembler.parse.bind(null, invalidProgram)).to.throw('invalid program');
         });
 
-        describe('single assembly codes', function() {
+        describe('single assembly operation', function() {
 
             it('returns 0 for BRK', function() {
                 var program = 'BRK';
@@ -82,7 +82,7 @@ describe('Assembler', function() {
             });
         });
 
-        describe('multiple assembly codes', function() {
+        describe('multiple assembly operations', function() {
 
             it('splits on single newline character', function() {
                 var program = 'INX\nDEY\nBRK';
@@ -110,6 +110,12 @@ describe('Assembler', function() {
             });
 
         });
-    });
 
+        describe('compiles labels correctly', function() {
+            it('when used for branching', function() {
+                var program = 'LDY 3\nloop:\n  DEY\n  CMY 0\n  BNE loop\nBRK';
+                expect(assembler.parse(program)).to.eql([10,3,9,6,0,7,-5,0]);
+            });
+        });
+    });
 });

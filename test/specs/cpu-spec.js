@@ -116,7 +116,7 @@ describe('CPU', function() {
             expect(cpu.getPC()).to.equal(4);
         });
 
-        it('BNE jumps program counter to value in next memory address if flag is false', function() {
+        it('BNE adds value in next memory address to PC if flag is false', function() {
             cpu.load([10, 20, 6, 21, 7, 94, 0]);
             cpu.exec();
 
