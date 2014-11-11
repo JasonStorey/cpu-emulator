@@ -2,9 +2,59 @@ module.exports = Assembler();
 
 function Assembler() {
     var OPCODES = require('./opcodes.js'),
-        labels = [];
+        LABELS = {};
 
     function create() {
+
+        function parse(program) {
+            var tokens;
+
+            if (typeof program !== 'string') {
+                throw new Error('invalid program');
+            }
+
+            tokens = program.split(/\s+/g).filter(trim);
+
+            return getOpcodes(tokens);
+        }
+
+        function getOpcodes(tokensWithLabels) {
+            var tokens = [],
+                machineCode = [];
+
+            tokensWithLabels.forEach(function extractLabels(token, index) {
+                if(isLabel(token)) {
+                    LABELS[extractLabelName(token)] = index;
+                } else {
+                    tokens.push(token);
+                }
+            });
+
+            tokens.forEach(function(token, index) {
+                machineCode[index] = getVal(token, tokens[index - 1], index);
+            });
+
+            return machineCode;
+        }
+
+        function getVal(token, previousToken, index) {
+            if(OPCODES[token] !== undefined) {
+                return OPCODES[token];
+            }
+
+            if(LABELS[token] !== undefined) {
+                switch(previousToken) {
+                    case 'BNE':
+                        return LABELS[token] - index - 1;
+                        break;
+
+                    default:
+                        throw new Error('invalid label usage');
+                }
+            }
+
+            return parseInt(token, 10);
+        }
 
         function trim(string) { return string.trim(); }
 
@@ -14,44 +64,6 @@ function Assembler() {
 
         function isLabel(token) {
             return token.charAt(token.length - 1) === ':';
-        }
-
-        function readLine(line) {
-            return line.split(' ').map(function(token) {
-                return OPCODES[token] !== undefined ? OPCODES[token] : token;
-            });
-        }
-
-        function parse(program) {
-            var machineCode = [];
-
-            if (typeof program !== 'string') {
-                throw new Error('invalid program');
-            }
-
-            program.split('\n')
-                .map(trim)
-                .filter(function(trimmedLine, index) {
-                    var trimmedLineIsLabel = isLabel(trimmedLine);
-                    if(trimmedLineIsLabel) {
-                        labels[extractLabelName(trimmedLine)] = index;
-                    }
-                    return !trimmedLineIsLabel;
-                })
-                .forEach(function(trimmedLine){
-                    if(trimmedLine.length > 0) {
-                        machineCode = machineCode.concat(readLine(trimmedLine));
-                    }
-                });
-
-            // TODO: Refactor this piece of nasty
-
-            return machineCode.map(function replaceLabels(op, index) {
-                if(labels[op] !== undefined) {
-                    return labels[op] - index;
-                }
-                return parseInt(op);
-            });
         }
 
         return {
