@@ -165,7 +165,6 @@ describe('CPU', function() {
 
             cpu.exec();
 
-            expect(cpu.getMemory()[0]).to.equal(0);
             expect(cpu.getSP()).to.equal(cpu.getMemory().length - 2);
             expect(cpu.getPC()).to.equal(cpu.getMemory()[1]);
         });
@@ -176,7 +175,7 @@ describe('CPU', function() {
             cpu.exec();
 
             expect(cpu.getSP()).to.equal(1);
-            expect(cpu.getPC()).to.equal(cpu.getMemory()[cpu.getSP()] + 1);
+            expect(cpu.getPC() - 1).to.equal(cpu.getMemory()[cpu.getSP()] + 1);
         });
     });
 });

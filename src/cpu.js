@@ -95,7 +95,7 @@ function CPU() {
                         break;
 
                     case 11: // 'JSR'
-                        memory[memory[SP]] = PC;
+                        memory[SP] = PC;
                         SP--;
                         advance();
                         PC = getCurrent() - 1;
@@ -103,7 +103,7 @@ function CPU() {
 
                     case 12: // 'RTS'
                         SP++;
-                        PC = memory[SP];
+                        PC = memory[SP] + 1;
                         break;
 
 

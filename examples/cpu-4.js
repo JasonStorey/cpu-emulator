@@ -5,13 +5,13 @@ var CPU = require('../src/cpu.js'),
 var assembler = Assembler.create(),
     cpu = CPU.create();
 
-var assembly = fs.readFileSync('./assets/cpu-app-2.asm', 'utf-8'),
+var assembly = fs.readFileSync('./assets/cpu-app-4.asm', 'utf-8'),
     program = assembler.parse(assembly);
 
 cpu.load(program);
 cpu.exec();
 
-printStringFromMemory(cpu.getMemory(), 128, 256);
+printStringFromMemory(cpu.getMemory(), 128, cpu.getMemory().length - 1);
 
 function printStringFromMemory(memory, s, e) {
     var str = '';
