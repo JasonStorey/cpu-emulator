@@ -5,7 +5,7 @@ var CPU = require('../src/cpu.js'),
 var assembler = Assembler.create(),
     cpu = CPU.create();
 
-var assembly = fs.readFileSync('../test/fixtures/cpu-app-2.txt', 'utf-8'),
+var assembly = fs.readFileSync('./assets/cpu-app-2.txt', 'utf-8'),
     program = assembler.parse(assembly);
 
 cpu.load(program);
