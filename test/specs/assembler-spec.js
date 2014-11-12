@@ -116,6 +116,11 @@ describe('Assembler', function() {
                 var program = 'LDY 3\nloop:\n  DEY\n  CMY 0\n  BNE loop\nBRK';
                 expect(assembler.parse(program)).to.eql([10,3,9,6,0,7,-5,0]);
             });
+
+            it('when used as single subroutine reference', function() {
+                var program = 'LDA 10\nJSR incABy10\nBRK\n\n\nincABy10:\n  ADC 10\n  RTS';
+                expect(assembler.parse(program)).to.eql([1,10,11,5,0,2,10,12]);
+            });
         });
     });
 });

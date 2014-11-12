@@ -19,10 +19,9 @@ function Assembler() {
         }
 
         function getOpcodes(tokensWithLabels) {
-            var tokens = [],
-                machineCode = [];
+            var tokens = [];
 
-            tokensWithLabels.forEach(function extractLabels(token, index) {
+            tokensWithLabels.forEach(function(token, index) {
                 if(isLabel(token)) {
                     LABELS[extractLabelName(token)] = index;
                 } else {
@@ -30,14 +29,13 @@ function Assembler() {
                 }
             });
 
-            tokens.forEach(function(token, index) {
-                machineCode[index] = getVal(token, tokens[index - 1], index);
+            return tokens.map(function(token, index) {
+                return getVal(token, tokens[index - 1], index);
             });
-
-            return machineCode;
         }
 
         function getVal(token, previousToken, index) {
+
             if(OPCODES[token] !== undefined) {
                 return OPCODES[token];
             }
@@ -48,8 +46,12 @@ function Assembler() {
                         return LABELS[token] - index - 1;
                         break;
 
+                    case 'JSR':
+                        return LABELS[token];
+                        break;
+
                     default:
-                        throw new Error('invalid label usage');
+                        throw new Error('invalid label usage : ' + token);
                 }
             }
 
@@ -58,12 +60,12 @@ function Assembler() {
 
         function trim(string) { return string.trim(); }
 
-        function extractLabelName(token) {
-            return token.substring(0, token.length - 1);
-        }
-
         function isLabel(token) {
             return token.charAt(token.length - 1) === ':';
+        }
+
+        function extractLabelName(token) {
+            return token.substring(0, token.length - 1);
         }
 
         return {
