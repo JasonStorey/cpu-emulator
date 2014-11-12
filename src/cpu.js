@@ -13,9 +13,11 @@ function CPU() {
             SP = memory.length - 1,
             PC = 0,
             flag,
-            registerA,
-            registerX,
-            registerY;
+            register = {
+                A: undefined,
+                X: undefined,
+                Y: undefined
+            };
 
         function getMemory() { return memory; }
 
@@ -27,11 +29,11 @@ function CPU() {
 
         function getFlag() { return flag; }
 
-        function getRegisterA() { return registerA; }
+        function getRegisterA() { return register.A; }
 
-        function getRegisterX() { return registerX; }
+        function getRegisterX() { return register.X; }
 
-        function getRegisterY() { return registerY; }
+        function getRegisterY() { return register.Y; }
 
         function getCurrent() { return memory[PC]; }
 
@@ -47,12 +49,12 @@ function CPU() {
                 switch(getCurrent()) {
                     case 1: // 'LDA'
                         advance();
-                        registerA = getCurrent();
+                        register.A = getCurrent();
                         break;
 
                     case 2: // 'ADC'
                         advance();
-                        registerA += getCurrent();
+                        register.A += getCurrent();
                         break;
 
                     case 3: // 'STA'
@@ -62,11 +64,11 @@ function CPU() {
 
                     case 4: // 'LDX'
                         advance();
-                        registerX = getCurrent();
+                        register.X = getCurrent();
                         break;
 
                     case 5: // 'INX'
-                        registerX++;
+                        register.X++;
                         break;
 
                     case 6: // 'CMY'
@@ -86,12 +88,12 @@ function CPU() {
                         break;
 
                     case 9: // 'DEY'
-                        registerY--;
+                        register.Y--;
                         break;
 
                     case 10: // 'LDY'
                         advance();
-                        registerY = getCurrent();
+                        register.Y = getCurrent();
                         break;
 
                     case 11: // 'JSR'
