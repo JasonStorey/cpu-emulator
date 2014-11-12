@@ -121,6 +121,11 @@ describe('Assembler', function() {
                 var program = 'LDA 10\nJSR incABy10\nBRK\n\n\nincABy10:\n  ADC 10\n  RTS';
                 expect(assembler.parse(program)).to.eql([1,10,11,5,0,2,10,12]);
             });
+
+            it('when used as nested subroutine references', function() {
+                var program = 'LDA 10\nJSR incABy10\nBRK\n\n\nincABy10:\n  ADC 10\n  JSR incABy50\n  RTS\n\nincABy50:\n  ADC 50\n  RTS';
+                expect(assembler.parse(program)).to.eql([1,10,11,5,0,2,10,11,10,12,2,50,12]);
+            });
         });
     });
 });

@@ -19,11 +19,13 @@ function Assembler() {
         }
 
         function getOpcodes(tokensWithLabels) {
-            var tokens = [];
+            var tokens = [],
+                numOfLabels = 0;
 
             tokensWithLabels.forEach(function(token, index) {
                 if(isLabel(token)) {
-                    LABELS[extractLabelName(token)] = index;
+                    LABELS[extractLabelName(token)] = index - numOfLabels;
+                    numOfLabels++;
                 } else {
                     tokens.push(token);
                 }
